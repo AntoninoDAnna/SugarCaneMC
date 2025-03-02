@@ -19,7 +19,7 @@ Once the sugarcare grows in front of the observer, the observer emits 1 redstone
 
 # tick structure 
   At each game tick, the game proceed as follow (only relevant mechanics):
-   - scheduled block tick are executed. It means that triggered observed activates, triggered piston extend/retract
+   - scheduled block tick are executed. It means that triggered observed activated, triggered piston extended/retracted
    - random tick. 
 
    
