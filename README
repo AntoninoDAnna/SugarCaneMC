@@ -1,0 +1,25 @@
+SugarCaneMC
+
+SugarCaneMC performs MonteCarlo simulation of a sugarcane farm in Minecraft wuth the common desing. 
+
+Minecraft mechanics
+
+Sugar canes are plant that grow by one block when the top block has recieved 16 random tick, until they reach an height of three block. When a sugar cane is broken, the number of random ticks recieved is resetted. Typical automatic sugar canes farm relies on the interaction with piston and Observer
+
+The typical structure is as follow:
+
+ // picture 
+
+
+Redstone delays:
+Due to differences in Java(J) and Bedrock(BR), the delays are different, here we try to  gives an exstensive explanation:
+
+Once the sugarcare grows in front of the observer, the observer emits 1 redstone-tick later (2 in BR) a redstone signal of level 15 for 2 redstone ticks. Assuming that it is powering a redstone line, it can power 14 piston either side plus one below itself for a total of 29 pistons. Once a piston is activated, it extend after 1 redstone tick (BR) or 1 game tick (J). It retracts one redstone tick after it is unpowered. While the piston is extended, the sugarcane cannot grow even if it gets a random tick. 
+
+
+# tick structure 
+  At each game tick, the game proceed as follow (only relevant mechanics):
+   - scheduled block tick are executed. It means that triggered observed activates, triggered piston extend/retract
+   - random tick. 
+
+   
