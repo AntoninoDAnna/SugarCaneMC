@@ -38,7 +38,7 @@ function random_tick(sc::Sugar_cane)
 end
 
 function grow(sc::Sugar_cane)
-  if sc.height <= 3
+  if sc.height < 3
     sc.height+=1; 
   end
   sc.random_tick = 0;
