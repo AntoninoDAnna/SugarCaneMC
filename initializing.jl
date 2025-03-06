@@ -15,48 +15,38 @@ We add a repeaters to both observers and then check again if there are uneffecte
 WARNING: Repeaters are not simulated as in Minecraft, we assume they transfer power immediately.
 
 """
-function set_observers(obs::Vector{Observer}, mode::Int64)
+function set_observers(obs::Vector{Observer}, mode::Int64,range_mode::Int64)
   if mode ==1
-    aux = Random.shuffle(1:Ns)[1:No];
+    aux = sort(Random.shuffle(1:Ns)[1:No]);
     @inbounds for i in 1:No
       obs[i].position = aux[i]
+      obs[i].range = [aux[i]>14 ? aux[i]-14 : 0,aux[i]<Ns-14 ? aux[i]-14 : Ns]
     end
   elseif mode ==2
     n  = div(Ns,No); # number of sugarcanes for each observers
     aux = range(start = div(n-1,2)+1, length = No, step = n)
     @inbounds for i in 1:10 
       obs[i].position = aux[i]
+      obs[i].range = [aux[i]>14 ? aux[i]-14 : 0,aux[i]<Ns-14 ? aux[i]-14 : Ns]
     end   
-  end   
-  @inbounds for i in 2:No
-    d = obs[i].position -obs[i-1].position + 1
-    while true
-      max_cap = 2*14 + 15*(obs[i].n_repeater_l+obs[i].n_repeater_r)
-      if d<= max_cap
-        break;
+  end 
+  if range_mode ==1
+    @inbounds for i in 2:No
+      r = range(obs[i-1].position,obs[i].position)
+      while true
+        covered = [range(obs[i-1].range...)...;range(obs[i].range...)...]
+        if all(x-> x in covered, r)
+          break;
+        end
+        obs[i-1].range[2] +=15
+        obs[i].range[1] -=15
       end
-      obs[i].n_repeater_l+=1;
-      obs[i-1].n_repeater_r+=1;
     end
-  end
-  # left of first obs
-  d = obs[1].position-1
-  while true
-    max_cap = 14 + 15*obs[1].n_repeater_l
-    if d<= max_cap
-      break;
-    end
-    obs[1].n_repeater_l+=1;
-  end
-
-  ##right of last obs 
-  d = obs[end].position-1
-  while true
-    max_cap = 14 + 15*obs[end].n_repeater_r
-    if d<= max_cap
-      break;
-    end
-    obs[end].n_repeater_r+=1;
+    # left of first obs
+    obs[1].range[1] =1
+    obs[end].range[2]=Ns
+  elseif range_mode ==2
+    [o.range=[1,Ns] for o in obs]
   end
 
 end

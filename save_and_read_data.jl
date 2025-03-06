@@ -8,7 +8,7 @@ function to_binary(sc::Sugar_cane)
   rt = sc.random_tick == max_random_tick ? 0x00 : sc.random_tick
   x = sc.height + rt << 2
   if x>0b00111111 ## this correspond to height = 3, random_tick = 15
-    @warn "sugar cane $s is in overflow!"
+    @warn "sugar cane $sc is in overflow!"
   end
   return x;
 end
@@ -43,7 +43,7 @@ save(f::Core.IO,sc::Vector{Sugar_cane}) = write(f,htol.(to_binary.(sc)))
 
 save(f::Core.IO,p::Vector{Piston}) = write(f,htol.(to_binary.(p)))
 
-function(f::Core.IO,o::Vector{Observers})
+function save(f::Core.IO,o::Vector{Observer})
   data = vcat(to_binary.(o)...)
   write(f,htol.(UInt8.(data[:,1]))) ## bools and tick since active
   write(f,htol.(UInt64.(data[:,2]))) ## positions
