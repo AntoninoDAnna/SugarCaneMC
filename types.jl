@@ -41,6 +41,7 @@ function grow(sc::Sugar_cane)
   if sc.height <= 3
     sc.height+=1; 
   end
+  sc.random_tick = 0;
   return sc.height == max_height ## if it gets to max_heigth return true and trigger the observe (if present)
 end
 
@@ -50,52 +51,74 @@ mutable struct Observer
   active::Bool 
   tick_since_active::UInt8
   position::UInt64;
-  n_repeater_l::UInt64;
-  n_repeater_r::UInt64;
-  Observer() = new(false,false,0,0,0,0)
+  range::Vector{UInt64}
+  Observer() = new(false,false,0,0,[0,0])
+end
+
+function Base.show(io::Core.IO,o::Observer)
+  println(io,"Observer:")
+  println(io," triggered          = ",o.triggered ? "true, " : "false, ")
+  println(io," active             = ", o.active ? "true, " : "false, ")
+  println(io," trick since active = $(Int64(o.tick_since_active)) ")
+  println(io," position           = $(Int64(o.position)) ")
+  println(io," range              = $(Int64.(range))")
 end
 
 function trigger(o::Observer)
-  o.triggerd = true;
+  o.triggered = true;
 end
 
 function activate(o::Observer)
   o.active = true;
-  o.trigger = false;
+  o.triggered = false;
 end
 
 function deactivate(o::Observer)
   o.active = false;
+  o.tick_since_active = 0;
 end
 
 function action(o::Observer)
-  tick_since_active +=1
-  if tick_since_active == 2
+  o.tick_since_active +=1
+  if o.tick_since_active == 2
     deactivate(o)
+    return false
   end
+  return true
 end
 
 function apply_tick(o::Observer)
   if o.triggered 
     activate(o)
+    return true
   elseif o.active
-    action(o::Observer)
+    return action(o::Observer)
   end
+  return false
 end
 
-function observer_range(o::Observer)
-  left  =o.position - (14 + 15*o.n_repeater_l)
-  right =o.position + (14 + 15*o.n_repeater_r)
-  left = left<1 ? 1 : left
-  right = right>Ns ? Ns : right
-  return left:right
-end
+observer_range(o::Observer) = range(o.range...)
 
 mutable struct Piston
   powered::Bool 
   depowered::Bool 
   extended::Bool 
   Piston() = new(false,false,false)
+end
+
+function Base.show(io::Core.IO,p::Piston)
+  print(io,"Piston: ")
+  print(io,"powered =",  p.powered   ? "true  " : "false ") 
+  print(io,"depowered =",p.depowered ? "true  " : "false ") 
+  print(io,"extended =", p.extended  ? "true  " : "false ")
+end
+
+function depowered(p::Piston)
+  if !p.powered
+    return
+  end
+  p.powered = false
+  p.depowered =true 
 end
 
 function powered(p::Piston)
@@ -107,7 +130,7 @@ function extend(p::Piston)
 end
 
 function retract(p::Piston)
-  p.extend = false
+  p.extended = false
   p.depowered = false
 end
 
