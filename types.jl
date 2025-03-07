@@ -28,7 +28,7 @@ function break_sugar_cane(sc::Sugar_cane)
   return aux;
 end
 
-function random_tick(sc::Sugar_cane)
+function random_tick(sc::Sugar_cane; p::Float64)
   sc.random_tick+=1;
   if sc.random_tick >= max_random_tick
     sc.random_tick=max_random_tick

@@ -15,19 +15,19 @@ We add a repeaters to both observers and then check again if there are uneffecte
 WARNING: Repeaters are not simulated as in Minecraft, we assume they transfer power immediately.
 
 """
-function set_observers(obs::Vector{Observer}, mode::Int64,range_mode::Int64)
+function set_observers(obs::Vector{Observer}, mode::Int64,range_mode::Int64; Ns::Int64, No::Int64)
   if mode ==1
     aux = sort(Random.shuffle(1:Ns)[1:No]);
     @inbounds for i in 1:No
-      obs[i].position = aux[i]
-      obs[i].range = [aux[i]>14 ? aux[i]-14 : 0,aux[i]<Ns-14 ? aux[i]-14 : Ns]
+      obs[i].position = aux[i]  
+      obs[i].range = [aux[i]>14 ? aux[i]-14 : 0,aux[i]<Ns-14 ? aux[i]+14 : Ns]
     end
   elseif mode ==2
     n  = div(Ns,No); # number of sugarcanes for each observers
     aux = range(start = div(n-1,2)+1, length = No, step = n)
     @inbounds for i in 1:10 
       obs[i].position = aux[i]
-      obs[i].range = [aux[i]>14 ? aux[i]-14 : 0,aux[i]<Ns-14 ? aux[i]-14 : Ns]
+      obs[i].range = [aux[i]>14 ? aux[i]-14 : 0,aux[i]<Ns-14 ? aux[i]+14 : Ns]
     end   
   end 
   if range_mode ==1

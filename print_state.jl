@@ -1,4 +1,4 @@
-function print_state(io::Core.IO ,sc::Vector{Sugar_cane},p::Vector{Piston},o::Vector{Observer})
+function print_state(io::Core.IO ,sc::Vector{Sugar_cane},p::Vector{Piston},o::Vector{Observer}; Ns::Int64, No::Int64)
   obs_pos = getfield.(o,:position)
   Obs = Any[0 for i in 1:Ns]
   Obs[obs_pos]=o;

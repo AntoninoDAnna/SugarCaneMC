@@ -10,24 +10,24 @@ rng = Random.MersenneTwister();
 
 
 for (prob,Ns,No) in parameters
+
   @info "starting simulation at prob =$prob, Ns = $Ns, No = $No"
   sugar_canes = [Sugar_cane() for _ in 1:Ns];
   pistons     = [Piston() for _ in 1:Ns];
   observers   = [Observer() for _ in 1:No];
   harvest     = zeros(UInt32,MC_length);
 
-  set_observers(observers, mode,range_mode);
+  set_observers(observers, mode,range_mode, Ns=Ns, No=No);
   obs_positions = getfield.(observers,:position)
 
-  sc_data       = open("data/SugarCane_Ns_$(Ns)_No_$(No)_p_$(round(p,digits(6)))_length_$(MC_length).dat","w")
-  harverst_data = open("data/Harvest_Ns_$(Ns)_No_$(No)_p_$(round(p,digits(6)))_length_$(MC_length).dat","w") 
-  LOG           = open("log/SugarCaneMC_Ns_$(Ns)_No_$(No)_p_$(round(p,digits(6)))_length_$(MC_length).log","w")
+  sc_data       = open("data/SugarCane_Ns_$(Ns)_No_$(No)_p_$(round(prob,digits=6))_length_$(MC_length).dat","w")
+  harverst_data = open("data/Harvest_Ns_$(Ns)_No_$(No)_p_$(round(prob,digits=6))_length_$(MC_length).dat","w") 
+  LOG           = open("log/SugarCaneMC_Ns_$(Ns)_No_$(No)_p_$(round(prob,digits=6))_length_$(MC_length).log","w")
   for tick in 1:MC_length
     if tick%2 ==0 ## 1 redstone tick = 2 game ticks
-      sc = 0; ## number of sugar canes harvested 
       for i in 1:Ns
         if apply_tick(pistons[i])
-          sc += break_sugar_cane(sugar_canes[i])
+          harvest[tick] += break_sugar_cane(sugar_canes[i])
         end
       end
       for i in 1:No
@@ -51,7 +51,7 @@ for (prob,Ns,No) in parameters
       if rand(rng)> prob;
         continue;
       end
-      if !random_tick(sugar_canes[i])
+      if !random_tick(sugar_canes[i],p=prob)
         continue;
       end
       if pistons[i].extended 
@@ -64,9 +64,9 @@ for (prob,Ns,No) in parameters
         trigger(observers[findfirst(obs_positions.==i)])
       end
     end  
-    @printf LOG "sugar cane harvested: %d \n" sc 
+    @printf LOG "sugar cane harvested: %d \n" harvest[tick] 
     @printf LOG "tick: %d\n" tick
-    print_state(LOG,sugar_canes,pistons,observers)
+    print_state(LOG,sugar_canes,pistons,observers, Ns=Ns, No=No)
     ##saving data
     save(sc_data,sugar_canes)
   end
