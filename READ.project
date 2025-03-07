@@ -1,0 +1,79 @@
+We want to see the optimal number of observer/sugarcane, and we are indifferent to the number of repeated we use. Therefore we want that whenerever an observer is triggered, all the piston will extend.
+
+We  have two extreem case: 1 observer per sugarcane (maximum efficiency) and 1 observer in total (minimum efficiency) therefore for each Ns we need one simulation at No =1 and une at No=Ns, plus any number of simulation in between. we will look at the absolute output/harvest-tick and the relative output with respect to the maximum efficiency
+
+We want to extrapolate to N-> infinity so we need to have at least 4 diffenent N. in order to keep the ratios observer/sugarcanes constant we will increase the number of observer linearly with N. we also want to test if, independly of Ns, there is an optimal number of Observers (i.e. x observers are optimal whatever is Ns.) in particular, [reddit post] states that No_optimal=9 (TODO: check). we will have a simulation at No=9 for each Ns and some simulation at No lower and higher that 9
+
+At the end we want to see how the effecency profile changes as p (probability of random tick). for this reason we will do small simulation at higher p then Minecraft p. 
+
+Planned simulation 
+
+=== limit to large Ns ====
+# target ratios ~ 0.25, 0.5, 0.75
+=== absolute maximum efficiency ====
+# target No 8 - 9 - 10
+=== p dependece ===
+# simulations at p = 0.001, 0.01, 0.1
+
+probability of rt | Ns  | No | No/Ns
+------------------------------------
+0.000732421875    | 10  | 1  | 0.1   
+0.000732421875    | 10  | 2  | 0.2
+0.000732421875    | 10  | 3  | 0.3
+0.000732421875    | 10  | 5  | 0.5
+0.001             | 10  | 5  | 0.5
+0.01              | 10  | 5  | 0.5
+0.1               | 10  | 5  | 0.5
+0.000732421875    | 10  | 7  | 0.7
+0.000732421875    | 10  | 8  | 0.8
+0.000732421875    | 10  | 9  | 0.9
+0.000732421875    | 10  | 10 | 1 
+------------------------------------
+0.000732421875    | 20  | 1  | 0.05   
+0.000732421875    | 20  | 5  | 0.25
+0.000732421875    | 20  | 8  | 0.4
+0.000732421875    | 20  | 9  | 0.55
+0.000732421875    | 20  | 10 | 0.50
+0.001             | 20  | 10 | 0.50
+0.01              | 20  | 10 | 0.50
+0.1               | 20  | 10 | 0.50
+0.000732421875    | 20  | 15 | 0.75
+0.000732421875    | 20  | 20 | 1
+------------------------------------
+0.000732421875    | 40  | 1  | 0.025   
+0.000732421875    | 40  | 8  | 0.2   
+0.000732421875    | 40  | 9  | 0.225   
+0.000732421875    | 40  | 10 | 0.25
+0.000732421875    | 40  | 20 | 0.50
+0.001             | 40  | 20 | 0.50
+0.01              | 40  | 20 | 0.50
+0.1               | 40  | 20 | 0.50
+0.000732421875    | 40  | 30 | 0.75
+0.000732421875    | 40  | 50 | 1
+------------------------------------
+0.000732421875    | 60  | 1  | 0.017
+0.000732421875    | 60  | 8  | 0.133
+0.000732421875    | 60  | 9  | 0.15
+0.000732421875    | 60  | 10 | 0.17
+0.000732421875    | 60  | 15 | 0.25
+0.000732421875    | 60  | 30 | 0.50
+0.000732421875    | 60  | 45 | 0.75
+0.000732421875    | 60  | 60 | 1
+------------------------------------
+0.000732421875    | 80  | 1  | 0.0125  
+0.000732421875    | 80  | 8  | 0.1  
+0.000732421875    | 80  | 9  | 0.1125  
+0.000732421875    | 80  | 10 | 0.125  
+0.000732421875    | 80  | 20 | 0.25
+0.000732421875    | 80  | 40 | 0.50
+0.000732421875    | 80  | 60 | 0.75
+0.000732421875    | 80  | 80 | 1
+------------------------------------
+0.000732421875    | 100 | 1  | 0.01 
+0.000732421875    | 100 | 8  | 0.08 
+0.000732421875    | 100 | 9  | 0.09 
+0.000732421875    | 100 | 10 | 0.10 
+0.000732421875    | 100 | 25 | 0.25
+0.000732421875    | 100 | 50 | 0.50
+0.000732421875    | 100 | 75 | 0.75
+0.000732421875    | 100 | 100| 1
